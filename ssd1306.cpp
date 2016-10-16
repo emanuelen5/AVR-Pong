@@ -1,7 +1,5 @@
 /*
  * SSD1306.c
- * 
- * The image loaded is Alice on a crayfish party.
  *
  * Created: 2016-05-08 10:53
  * Author : Emaus

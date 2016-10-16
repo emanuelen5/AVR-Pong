@@ -1,2 +1,2 @@
 # AVR-Pong
-A Pong game for a Atmega328P connected to an SSD1306 display driver
+A Pong game for an Atmega328P connected to an SSD1306 display driver

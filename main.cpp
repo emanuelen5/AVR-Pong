@@ -18,10 +18,10 @@ Connection diagram:
                     PD4|06  23|PC0
                     Vcc|07  22|Gnd
                     Gnd|08  21|Aref
-                    PB6|09  20|AVcc
+(RESET#)            PB6|09  20|AVcc
                     PB7|10  19|PB5    (SCK)
                     PD5|11  18|PB4
-(RESET#)            PD6|12  17|PB3    (MOSI)
+                    PD6|12  17|PB3    (MOSI)
                     PD7|13  16|PB2    (SS)      
                     PB0|14  15|PB1    (DATA/COMMAND#)
                         ------
@@ -86,14 +86,13 @@ void initRefreshInterrupt(void) {
 int main(void) {
 	
 	initADC();
+	initRefreshInterrupt();
 	
 	pong.menu();
 	
-	initRefreshInterrupt();
 	sei();
-	
 	while (1) {
-		pong.refreshPads();
+		pong.refreshPads(); // Draw position of pads from ADC values
 		pong.refreshBall();
 		// If someone has made a point, display menu and temporarily deactivate timer
 		if (pong.madePoint(0) != 0) {

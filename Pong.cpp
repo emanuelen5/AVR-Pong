@@ -24,10 +24,11 @@ void Pong::stepBall() {
 
 void Pong::refreshBall() {
 	point8_t pos;
+	uint8_t sreg_save = SREG;
 	cli();
 	pos.x = b.getX();
 	pos.y = b.getY();
-	sei();
+	SREG = sreg_save;
 
 	display.clear_pixel(lastPos.x, lastPos.y);
 	display.set_pixel(pos.x, pos.y);
@@ -78,7 +79,7 @@ void Pong::pointMenu() {
 		setSubString(scoreStr, "LEFT!", SCORE_START_POS);
 	else
 		setSubString(scoreStr, "RIGHT!", SCORE_START_POS);
-	display.writeStr(scoreStr, 0, 0);
+	display.writeStr(scoreStr, 1, 0);
 
 	char pointString[] = "   -   ";
 	if (lPoints < 10) {
@@ -95,8 +96,24 @@ void Pong::pointMenu() {
 	}
 	
 	display.writeStr(pointString, 60 - 4*3, 28);
-	display.refresh(); _delay_ms(3000);
+	display.refresh();
+	
+	for (uint16_t i=0; i<255; i++) {
+		lPad.setY(readADC(PONG_L_PIN)); // [0-255]
+		rPad.setY(readADC(PONG_R_PIN)); // [0-255]
+		lPad.refresh(display);
+		rPad.refresh(display);
+		uint8_t height = p<0?lPad.getY():rPad.getY();
+		b.setY(height);
+		refreshBall();
+	}
+	
+	b.setVelY((p<0?lPad.getVel():rPad.getVel())*128);
+	
 	display.clear();
+	lPad.refresh(display);
+	rPad.refresh(display);
+	refreshBall();
 	display.refresh();
 }
 
@@ -127,11 +144,13 @@ uint8_t Ball::touchWalls(Pong &pong) {
 	// Teleport left <-> right
 	// TODO: Change this to point system
 	if (pos.x < 0) {
+		setX(1);
 		vel.x = -BALL_INIT_SPEED;
 		vel.y = 0;
 		spin = 0;
 		pong.madePoint(-1);
-		} else if (pos.x >= 128*PIX_SCL) {
+	} else if (pos.x >= 128*PIX_SCL) {
+		setX(126);
 		vel.x = BALL_INIT_SPEED;
 		vel.y = 0;
 		spin = 0;

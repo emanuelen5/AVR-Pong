@@ -21,9 +21,11 @@ public:
 	int16_t getY();
 	
 	void setX(uint8_t x);
+	void setY(uint8_t y);
 	
 	point16_t getVel();
 	void setVelX(int16_t velX);
+	void setVelY(int16_t velY);
 	void revX();
 	
 	uint8_t bouncePad(Pad &pad);

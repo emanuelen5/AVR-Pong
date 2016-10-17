@@ -11,8 +11,16 @@ void Ball::setX(uint8_t x) {
 	pos.x = x*PIX_SCL;
 }
 
+void Ball::setY(uint8_t y) {
+	pos.y = y*PIX_SCL;
+}
+
 void Ball::setVelX(int16_t velX) {
 	vel.x = velX;
+}
+
+void Ball::setVelY(int16_t velY) {
+	vel.y = velY;
 }
 
 int16_t Ball::getX() {
@@ -86,6 +94,7 @@ void Ball::step() {
 	
 	int16_t dv = spin/16/SPEED_SCL;
 	vel.y += (vel.x > 0)?dv:-dv;
+	vel.y = vel.y - vel.y/64/SPEED_SCL;
 	
 	pos.x += vel.x/64;
 	pos.y += vel.y/64;
